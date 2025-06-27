@@ -14,7 +14,7 @@ A fun and simple app that generates unique game ideas based on randomized genres
 
 ## 🚀 Demo
 
-[👉 Live Site](https://your-deployment-url.com) <!-- Replace with your actual deployed link -->
+[👉 Live Site](https://your-deployment-url.com)
 
 ## 🛠️ Built With
 

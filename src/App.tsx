@@ -10,7 +10,7 @@ import {
 } from "./data/ideaParts";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Lock, Unlock, Gamepad2, Star, Trash2, RefreshCcw } from "lucide-react";
+import { Lock, Unlock, Gamepad2, Star, Trash2 } from "lucide-react";
 
 function random(arr: string[]) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -115,12 +115,12 @@ export default function App() {
     }
   }
 
-  const [isSpinning, setIsSpinning] = useState(false);
+  // const [isSpinning, setIsSpinning] = useState(false);
 
   function handleGenerateClick() {
-    setIsSpinning(true);
+    // setIsSpinning(true);
     generateIdea();
-    setTimeout(() => setIsSpinning(false), 500);
+    // setTimeout(() => setIsSpinning(false), 500);
   }
 
   return (
@@ -151,7 +151,6 @@ export default function App() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {Object.entries(locks).map(([key, value]) => {
-          const color = categoryColors[key].split("-")[1];
           return (
             <motion.button
               key={key}
