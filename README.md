@@ -14,7 +14,7 @@ A fun and simple app that generates unique game ideas based on randomized genres
 
 ## 🚀 Demo
 
-[👉 Live Site](https://your-deployment-url.com)
+[👉 Live Site](https://gameideas.vercel.app/)
 
 ## 🛠️ Built With
 

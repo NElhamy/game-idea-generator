@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+html,
+body {
+  @apply bg-zinc-100 dark:bg-zinc-900;
+}
+
 body {
   overflow-y: scroll;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
