@@ -3,10 +3,9 @@
 html,
 body {
   @apply bg-zinc-100 dark:bg-zinc-900;
-  @apply overscroll-none;
+  @apply overflow-y-auto;
 }
 
 body {
-  overflow-y: scroll;
   font-family: "Poppins", sans-serif;
 }
