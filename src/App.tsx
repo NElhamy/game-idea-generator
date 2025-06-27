@@ -151,10 +151,7 @@ export default function App() {
           Generate Idea
         </motion.button>
 
-        <div className="flex items-center gap-2">
-          <p className="text-sm text-gray-800 dark:text-zinc-400">
-            Lock Categories
-          </p>
+        <div className="flex items-center">
           <TooltipInfo />
         </div>
 

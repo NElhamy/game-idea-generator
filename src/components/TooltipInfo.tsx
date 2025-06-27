@@ -22,27 +22,26 @@ export default function TooltipInfo() {
   return (
     <div
       ref={containerRef}
-      className="relative inline-block"
+      className="relative inline-flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
+      onClick={() => setShowTooltip((prev) => !prev)}
     >
-      <button
-        onClick={() => setShowTooltip((prev) => !prev)}
-        className="mt-1 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-white focus:outline-none"
-        aria-label="Info about locking categories"
-      >
-        <Info size={20} />
-      </button>
+      <span className="cursor-pointer text-xs">Lock Categories</span>
+      <Info size={12} className="cursor-pointer" />
 
-      {/* Tooltip container */}
+      {/* Tooltip */}
       <div
-        className={`absolute -left-24 sm:left-6 sm:top-1 z-10 text-white dark:text-black text-sm sm:text-xs px-3 py-2 rounded shadow w-40 transition-all duration-200 
-    ${
-      showTooltip
-        ? "opacity-100 translate-y-0 bg-zinc-800 dark:bg-zinc-200"
-        : "opacity-0 -translate-y-1 pointer-events-none"
-    }
-  `}
+        className={`absolute z-10 text-white dark:text-black text-xs px-3 py-2 rounded shadow transition-all duration-200
+          max-w-[70vw] w-max text-center
+          sm:left-14 sm:top-3
+          left-1/2 top-full mt-2 -translate-x-1/2
+          ${
+            showTooltip
+              ? "opacity-100 translate-y-0 bg-zinc-800 dark:bg-zinc-200"
+              : "opacity-0 -translate-y-1 pointer-events-none"
+          }
+        `}
       >
         Lock a category so it won't change when generating new ideas.
       </div>
