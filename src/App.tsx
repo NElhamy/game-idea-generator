@@ -49,6 +49,20 @@ export default function App() {
   });
 
   useEffect(() => {
+    const favicon = document.getElementById("favicon") as HTMLLinkElement;
+    const match = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function updateFavicon(e: MediaQueryListEvent | MediaQueryList) {
+      favicon.href = e.matches ? "/favicon-dark.png" : "/favicon-light.png";
+    }
+
+    updateFavicon(match); // Set on initial load
+    match.addEventListener("change", updateFavicon); // Listen for changes
+
+    return () => match.removeEventListener("change", updateFavicon);
+  }, []);
+
+  useEffect(() => {
     const stored = localStorage.getItem("favorites");
     if (stored) setFavorites(JSON.parse(stored));
     generateIdea();
@@ -112,14 +126,14 @@ export default function App() {
   return (
     <main className="min-h-screen bg-zinc-100 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-zinc-800 flex flex-col items-center justify-start gap-8 py-24 px-10">
       <h1 className="flex flex-col sm:flex-row items-center gap-2 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white text-center sm:text-left">
-        <Gamepad2 size={40} className="text-white" />
+        <Gamepad2 size={40} className="text-gray-800 dark:text-white" />
         <span>Game Idea Generator</span>
       </h1>
 
       <motion.button
         onClick={handleGenerateClick}
         whileTap={{ scale: 0.95 }}
-        className="dark:bg-gray-200 dark:hover:bg-gray-300 hover:cursor-pointer dark:text-black font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center"
+        className="bg-zinc-800 hover:bg-zinc-900 text-white dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center hover:cursor-pointer"
       >
         {/* <motion.span
           animate={isSpinning ? { rotate: -360 } : { rotate: 0 }}
@@ -136,25 +150,28 @@ export default function App() {
       </motion.button>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-        {Object.entries(locks).map(([key, value]) => (
-          <motion.button
-            key={key}
-            onClick={() => setLocks((prev) => ({ ...prev, [key]: !value }))}
-            whileTap={{ scale: 0.95 }}
-            className={`px-3 py-1 text-sm rounded-md border transition font-medium text-white ${
-              value
-                ? `bg-${categoryColors[key].split("-")[1]}-500`
-                : "bg-white dark:bg-zinc-800 text-gray-800 dark:text-white border-zinc-300 dark:border-zinc-700"
-            }`}
-          >
-            {value ? (
-              <Lock size={16} className="inline mr-1" />
-            ) : (
-              <Unlock size={16} className="inline mr-1" />
-            )}{" "}
-            {key}
-          </motion.button>
-        ))}
+        {Object.entries(locks).map(([key, value]) => {
+          const color = categoryColors[key].split("-")[1];
+          return (
+            <motion.button
+              key={key}
+              onClick={() => setLocks((prev) => ({ ...prev, [key]: !value }))}
+              whileTap={{ scale: 0.95 }}
+              className={`px-3 py-1 text-sm rounded-md border transition font-medium ${
+                value
+                  ? categoryColors[key]
+                  : "bg-white dark:bg-zinc-800 text-gray-800 dark:text-white border-zinc-300 dark:border-zinc-700"
+              }`}
+            >
+              {value ? (
+                <Lock size={16} className="inline mr-1" />
+              ) : (
+                <Unlock size={16} className="inline mr-1" />
+              )}{" "}
+              {key}
+            </motion.button>
+          );
+        })}
       </div>
 
       {fullIdea && (

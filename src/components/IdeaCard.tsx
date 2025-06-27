@@ -28,7 +28,7 @@ export default function IdeaCard({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="text-md font-medium text-gray-800 dark:text-white pr-10 leading-relaxed text-left"
+        className="text-md font-medium text-zinc-800 dark:text-white pr-10 leading-relaxed text-left"
       >
         {ideaDisplay ?? idea}
       </motion.p>
@@ -39,7 +39,12 @@ export default function IdeaCard({
           className="absolute top-4 right-4 text-yellow-400 hover:text-yellow-500 transition-transform duration-300 hover:scale-125 hover:cursor-pointer"
           aria-label="Save to favorites"
         >
-          <Star fill={isSaved ? "#facc15" : "none"} size={20} />
+          <Star
+            className={
+              isSaved ? "fill-yellow-400 text-yellow-400" : "text-yellow-400"
+            }
+            size={20}
+          />
         </button>
       )}
 

@@ -1,69 +1,61 @@
-# React + TypeScript + Vite
+# 🎮 Game Idea Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fun and simple app that generates unique game ideas based on randomized genres, tones, mechanics, and more. Built with React, Tailwind CSS, and Framer Motion.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎲 Randomly generate game ideas  
+- 🔒 Lock categories to preserve favorite traits  
+- ⭐ Save your favorite ideas  
+- 🗑️ Remove saved ideas with undo  
+- 🌙 Dark mode & light mode support  
+- 🎮 Fully responsive design  
+- 🔁 Spinning animation on generation button  
 
-## Expanding the ESLint configuration
+## 🚀 Demo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+[👉 Live Site](https://your-deployment-url.com) <!-- Replace with your actual deployed link -->
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Built With
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- [React](https://reactjs.org/)  
+- [Vite](https://vitejs.dev/)  
+- [Tailwind CSS](https://tailwindcss.com/)  
+- [Framer Motion](https://www.framer.com/motion/)  
+- [Lucide Icons](https://lucide.dev/)  
+- [Sonner (toast notifications)](https://sonner.emilkowal.ski/)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📦 Installation
+
+```bash
+git clone https://github.com/your-username/game-idea-generator.git
+cd game-idea-generator
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📁 Folder Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/
+│   └── IdeaCard.tsx
+├── data/
+│   └── ideaParts.ts
+├── App.tsx
+└── main.tsx
+```
+
+## 🔧 Available Scripts
+
+```
+npm run dev – Start the local development server
+
+npm run build – Create a production build
+
+npm run preview – Preview the production build locally
+```
+
+## 📄 License
+
+This project is licensed under the MIT License.
