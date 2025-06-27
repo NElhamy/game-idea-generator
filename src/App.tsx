@@ -152,20 +152,20 @@ export default function App() {
         </motion.button>
 
         <div className="flex items-center gap-2">
-          <p className="text-xs text-gray-800 dark:text-zinc-400">
+          <p className="text-sm text-gray-800 dark:text-zinc-400">
             Lock Categories
           </p>
           <TooltipInfo />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {Object.entries(locks).map(([key, value]) => {
             return (
               <motion.button
                 key={key}
                 onClick={() => setLocks((prev) => ({ ...prev, [key]: !value }))}
                 whileTap={{ scale: 0.95 }}
-                className={`px-3 py-1 text-sm rounded-md border transition font-medium hover:cursor-pointer ${
+                className={`px-4 py-2 text-sm rounded-md border transition font-medium hover:cursor-pointer ${
                   value
                     ? categoryColors[key]
                     : "bg-white dark:bg-zinc-800 text-gray-800 dark:text-white border-zinc-300 dark:border-zinc-700"
