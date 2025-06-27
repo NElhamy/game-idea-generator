@@ -3,8 +3,15 @@ import { Info } from "lucide-react";
 
 export default function TooltipInfo() {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Detect if it's a touch device
+  useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  // Close tooltip if clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -23,9 +30,9 @@ export default function TooltipInfo() {
     <div
       ref={containerRef}
       className="relative inline-flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-      onClick={() => setShowTooltip((prev) => !prev)}
+      onMouseEnter={() => !isTouchDevice && setShowTooltip(true)}
+      onMouseLeave={() => !isTouchDevice && setShowTooltip(false)}
+      onClick={() => isTouchDevice && setShowTooltip((prev) => !prev)}
     >
       <span className="cursor-pointer text-xs">Lock Categories</span>
       <Info size={12} className="cursor-pointer" />
