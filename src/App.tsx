@@ -125,7 +125,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen overscroll-none flex flex-col bg-zinc-100 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-zinc-800">
+    <div className="min-h-screen flex flex-col bg-zinc-100 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-zinc-800">
       <main className="grow flex flex-col items-center justify-start gap-8 py-24 px-10">
         <h1 className="flex flex-col sm:flex-row items-center gap-2 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white text-center sm:text-left">
           <Gamepad2 size={40} className="text-gray-800 dark:text-white" />
