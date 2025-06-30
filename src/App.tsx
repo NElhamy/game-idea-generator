@@ -197,7 +197,7 @@ export default function App() {
 
         <motion.button
           onClick={generateIdea}
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.4 }}
           className="bg-zinc-800 hover:bg-zinc-900 text-white dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center cursor-pointer"
         >
           Generate Idea
