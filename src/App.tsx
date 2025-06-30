@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import IdeaCard from "./components/IdeaCard";
 import SettingsPanel from "./components/SettingsPanel";
 import TooltipInfo from "./components/TooltipInfo";
+import SortDropdown from "./components/SortDropdown";
 import {
   genres,
   mechanics,
@@ -43,6 +44,7 @@ const categoryColors: Record<string, string> = {
 interface FavoriteIdea {
   idea: string;
   name?: string;
+  timestamp?: number;
 }
 
 export default function App() {
@@ -52,6 +54,9 @@ export default function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [exactMatch, setExactMatch] = useState(false);
+  const [sortOption, setSortOption] = useState<
+    "default" | "az" | "za" | "oldest"
+  >("default");
 
   const [coloredFavorites, setColoredFavorites] = useState(() => {
     const stored = localStorage.getItem("coloredFavorites");
@@ -210,7 +215,11 @@ export default function App() {
         existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1;
       const defaultName = `Idea ${nextNumber}`;
 
-      const updated = [...favorites, { idea: ideaString, name: defaultName }];
+      const updated = [
+        ...favorites,
+        { idea: ideaString, name: defaultName, timestamp: Date.now() },
+      ];
+
       setFavorites(updated);
       localStorage.setItem("favorites", JSON.stringify(updated));
       toast("Saved! Find favorites below.", { icon: "⭐", duration: 2000 });
@@ -273,6 +282,7 @@ export default function App() {
       ...updated[editingIndex],
       name: editingName.replace(/^\s+/, "") || undefined,
     };
+
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
 
@@ -328,20 +338,33 @@ export default function App() {
   }
 
   // Filter favorites based on search query - NAME ONLY
-  const filteredFavorites =
+  let filteredFavorites =
     searchQuery.length === 0
-      ? favorites
+      ? [...favorites]
       : favorites.filter((favoriteItem) => {
-          const name =
-            typeof favoriteItem === "object" && favoriteItem
-              ? favoriteItem.name || ""
-              : "";
-
+          const name = favoriteItem.name?.toLowerCase() || "";
           const query = searchQuery.toLowerCase();
-          const itemName = name.toLowerCase();
-
-          return exactMatch ? itemName === query : itemName.includes(query);
+          return exactMatch ? name === query : name.includes(query);
         });
+
+  if (sortOption === "az") {
+    filteredFavorites.sort((a, b) => {
+      const nameA = (a.name || "").toLowerCase();
+      const nameB = (b.name || "").toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+  } else if (sortOption === "za") {
+    filteredFavorites.sort((a, b) => {
+      const nameA = (a.name || "").toLowerCase();
+      const nameB = (b.name || "").toLowerCase();
+      return nameB.localeCompare(nameA);
+    });
+  } else if (sortOption === "oldest") {
+    filteredFavorites.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
+  } else if (sortOption === "default") {
+    // default = newest first
+    filteredFavorites.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
+  }
 
   const isCurrentIdeaFavorited = favorites.some((f) => f.idea === ideaString);
 
@@ -442,11 +465,24 @@ export default function App() {
 
         {(favorites.length > 0 || filteredFavorites.length > 0) && (
           <div className="max-w-xl w-full mt-10">
-            <div className="flex items-center gap-2 mb-4">
-              <Star size={20} fill="currentColor" className="text-yellow-400" />
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                Favorites
-              </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2 sm:gap-4">
+              {/* Title with icon */}
+              <div className="flex items-center gap-2">
+                <Star
+                  size={20}
+                  fill="currentColor"
+                  className="text-yellow-400"
+                />
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                  Favorites
+                </h2>
+              </div>
+
+              {/* Sort control */}
+              <SortDropdown
+                sortOption={sortOption}
+                setSortOption={setSortOption}
+              />
             </div>
 
             <div className="relative mb-4">
@@ -465,25 +501,32 @@ export default function App() {
                 onChange={(e) =>
                   setSearchQuery(e.target.value.replace(/^\s+/, ""))
                 }
-                className="w-full pl-10 pr-32 py-3 text-sm bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                className="w-full pl-10 pr-44 py-3 text-sm bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
 
               {/* Exact match toggle button */}
-              <button
-                onClick={() => setExactMatch(!exactMatch)}
-                className={`absolute right-10 top-1/2 transform -translate-y-1/2 px-2 py-1 text-xs rounded transition-colors focus:outline-none ${
-                  exactMatch
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-                }`}
-                title={
-                  exactMatch
-                    ? "Matches the name character by character. Not case sensitive."
-                    : "Switch to strict search"
-                }
-              >
-                {exactMatch ? "Strict" : "Normal"}
-              </button>
+              <div className="absolute right-10 top-1/2 -translate-y-1/2 flex border border-zinc-300 dark:border-zinc-600 rounded-md overflow-hidden text-xs font-semibold">
+                <button
+                  onClick={() => setExactMatch(false)}
+                  className={`px-3 py-1 transition-colors ${
+                    exactMatch
+                      ? "bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                      : "dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black bg-zinc-800 hover:bg-zinc-900 text-white"
+                  }`}
+                >
+                  Normal
+                </button>
+                <button
+                  onClick={() => setExactMatch(true)}
+                  className={`px-3 py-1 transition-colors ${
+                    exactMatch
+                      ? "dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black bg-zinc-800 hover:bg-zinc-900 text-white"
+                      : "bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                  }`}
+                >
+                  Strict
+                </button>
+              </div>
 
               {searchQuery && (
                 <button
