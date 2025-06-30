@@ -77,7 +77,6 @@ export default function App() {
     if (theme === "dark") {
       root.classList.add("dark");
     } else if (theme === "light") {
-      // For light mode, don't add any class - Tailwind works by absence of "dark" class
     } else {
       // System mode
       const isSystemDark = window.matchMedia(
