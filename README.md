@@ -22,15 +22,15 @@ A fun and simple app that generates unique game ideas based on randomized genres
 
 ### 🌙 Idea Generator (Dark Mode)
 
-![Generator Dark Mode](./public/screenshots/generator-dark.png)
+![Generator Dark Mode](./screenshots/generator-dark.png)
 
 ### ⭐ Favorites Section with Search & Color
 
-![Favorites Section](./public/screenshots/favorites-section.png)
+![Favorites Section](./screenshots/favorites-section.png)
 
 ### ⚙️ Setting Panel
 
-![Settings Panel](./public/screenshots/settings-panel.png)
+![Settings Panel](./screenshots/settings-panel.png)
 
 ## 🛠️ Built With
 
