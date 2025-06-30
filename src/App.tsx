@@ -282,20 +282,28 @@ export default function App() {
 
   function handleRemoveFavorite(idx: number) {
     const ideaToRemove = favorites[idx];
-    const updated = favorites.filter((_, i) => i !== idx);
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
 
+    // Remove it from state
+    setFavorites((prev) => {
+      const updated = [...prev];
+      updated.splice(idx, 1);
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      return updated;
+    });
+
+    // Show undo toast that only re-inserts the removed idea
     toast("Removed from favorites", {
       icon: <Trash2 size={16} className="text-zinc-400" />,
       action: {
         label: "Undo",
         onClick: () => {
-          // Insert the item back at its original position
-          const restored = [...updated];
-          restored.splice(idx, 0, ideaToRemove);
-          setFavorites(restored);
-          localStorage.setItem("favorites", JSON.stringify(restored));
+          setFavorites((prev) => {
+            const restored = [...prev];
+            restored.splice(idx, 0, ideaToRemove);
+            localStorage.setItem("favorites", JSON.stringify(restored));
+            return restored;
+          });
+
           toast("Restored!");
         },
       },
