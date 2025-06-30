@@ -33,12 +33,12 @@ function articleFor(word: string) {
 }
 
 const categoryColors: Record<string, string> = {
-  tone: "text-yellow-500",
-  genre: "text-blue-500",
-  mechanic: "text-red-500",
-  perspective: "text-purple-500",
-  role: "text-green-500",
-  twist: "text-pink-500",
+  tone: "text-yellow-400",
+  genre: "text-blue-400",
+  mechanic: "text-red-400",
+  perspective: "text-purple-400",
+  role: "text-green-400",
+  twist: "text-pink-400",
 };
 
 interface FavoriteIdea {
