@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Star, Copy } from "lucide-react";
 
 type IdeaCardProps = {
@@ -28,14 +28,18 @@ export default function IdeaCard({
       transition={{ duration: 0.3 }}
       className="bg-white dark:bg-zinc-800 shadow-xl rounded-2xl px-6 py-5 max-w-xl w-full relative"
     >
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
-        className="text-md font-medium text-zinc-800 dark:text-white leading-relaxed text-left"
-      >
-        {colored && ideaDisplay ? ideaDisplay : idea}
-      </motion.p>
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={idea} // Key on the text instead
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="text-md font-medium text-zinc-800 dark:text-white leading-relaxed text-left"
+        >
+          {colored && ideaDisplay ? ideaDisplay : idea}
+        </motion.p>
+      </AnimatePresence>
 
       <div className="absolute top-4 right-4 flex items-center gap-2">
         {onCopy && (

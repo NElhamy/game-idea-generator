@@ -246,7 +246,6 @@ export default function App() {
             </div>
 
             <IdeaCard
-              key={ideaString}
               idea={ideaString}
               ideaDisplay={fullIdea}
               colored={true}

@@ -50,7 +50,7 @@ export default function SearchBar({
           </button>
           <button
             onClick={() => setExactMatch(true)}
-            title="Search for exact name, character for character. Not case-sensitive."
+            title=" Match name exactly, character for character. Not case-sensitive."
             className={`px-3 py-1 transition-colors cursor-pointer ${
               exactMatch
                 ? "dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black bg-zinc-800 hover:bg-zinc-900 text-white"
