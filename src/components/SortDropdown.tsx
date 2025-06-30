@@ -62,7 +62,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm min-w-[140px]"
+        className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm min-w-[140px] cursor-pointer"
       >
         <ArrowUpDown size={16} className="text-gray-500 dark:text-gray-400" />
         <span className="text-sm font-medium flex-1 text-left">

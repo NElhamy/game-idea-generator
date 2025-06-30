@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Toaster, toast } from "sonner";
+import { Gamepad2, Star, Copy, Trash2 } from "lucide-react";
+
+// Component imports
 import IdeaCard from "./components/IdeaCard";
 import SettingsPanel from "./components/SettingsPanel";
 import TooltipInfo from "./components/TooltipInfo";
-import SortDropdown from "./components/SortDropdown";
+import LockButtons from "./components/LockButtons";
+import FavoritesList from "./components/FavoritesList";
+
+// Data imports
 import {
   genres,
   mechanics,
@@ -11,85 +19,35 @@ import {
   perspectives,
   roles,
 } from "./data/ideaParts";
-import { motion, AnimatePresence } from "framer-motion";
-import { Toaster, toast } from "sonner";
-import {
-  Lock,
-  Unlock,
-  Gamepad2,
-  Star,
-  Trash2,
-  Copy,
-  Search,
-  X,
-} from "lucide-react";
 
-function random(arr: string[]) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+// Type imports
+import type { FavoriteIdea, Theme, Locks } from "./types";
 
-function articleFor(word: string) {
-  return /^[aeiou]/i.test(word) ? "An" : "A";
-}
+// Utility imports
+import { random, articleFor, resolveTheme } from "./utils/ideaHelpers";
+import { categoryColors } from "./constants";
 
-const categoryColors: Record<string, string> = {
-  tone: "text-yellow-400",
-  genre: "text-blue-400",
-  mechanic: "text-red-400",
-  perspective: "text-purple-400",
-  role: "text-green-400",
-  twist: "text-pink-400",
-};
-
-interface FavoriteIdea {
-  idea: string;
-  name?: string;
-  timestamp?: number;
-}
+// Hook imports
+import { useTheme } from "./hooks/useTheme";
 
 export default function App() {
+  // Favorites state
   const [favorites, setFavorites] = useState<FavoriteIdea[]>([]);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState("");
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [exactMatch, setExactMatch] = useState(false);
-  const [sortOption, setSortOption] = useState<
-    "default" | "az" | "za" | "oldest"
-  >("default");
-
+  // Theme state
   const [coloredFavorites, setColoredFavorites] = useState(() => {
     const stored = localStorage.getItem("coloredFavorites");
-    return stored === "true"; // default to false if not set
+    return stored === "true";
   });
 
-  const [theme, setTheme] = useState<"system" | "light" | "dark">(
-    () =>
-      (localStorage.getItem("theme") as "system" | "light" | "dark") || "system"
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem("theme") as Theme) || "system"
   );
 
-  useEffect(() => {
-    const root = document.documentElement;
+  // Use theme hook
+  useTheme(theme);
 
-    // Remove both classes to avoid buildup
-    root.classList.remove("light", "dark");
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else if (theme === "light") {
-    } else {
-      // System mode
-      const isSystemDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      if (isSystemDark) {
-        root.classList.add("dark");
-      }
-    }
-
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
+  // Idea generation state
   const [genre, setGenre] = useState("");
   const [mechanic, setMechanic] = useState("");
   const [twist, setTwist] = useState("");
@@ -97,7 +55,7 @@ export default function App() {
   const [perspective, setPerspective] = useState("");
   const [role, setRole] = useState("");
 
-  const [locks, setLocks] = useState({
+  const [locks, setLocks] = useState<Locks>({
     genre: false,
     mechanic: false,
     twist: false,
@@ -106,33 +64,7 @@ export default function App() {
     role: false,
   });
 
-  const [isNewIdea, setIsNewIdea] = useState(false);
-
-  useEffect(() => {
-    const favicon = document.getElementById("favicon") as HTMLLinkElement;
-    const match = window.matchMedia("(prefers-color-scheme: dark)");
-
-    function updateFavicon(e: MediaQueryListEvent | MediaQueryList) {
-      favicon.href = e.matches ? "/favicon-dark.png" : "/favicon-light.png";
-    }
-
-    updateFavicon(match); // Set on initial load
-    match.addEventListener("change", updateFavicon); // Listen for changes
-
-    return () => match.removeEventListener("change", updateFavicon);
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      if (theme === "system") {
-        document.documentElement.classList.toggle("dark", mq.matches);
-      }
-    };
-    mq.addEventListener("change", handleChange);
-    return () => mq.removeEventListener("change", handleChange);
-  }, [theme]);
-
+  // Load favorites and generate initial idea
   useEffect(() => {
     const stored = localStorage.getItem("favorites");
     if (stored) {
@@ -159,8 +91,6 @@ export default function App() {
   }, []);
 
   function generateIdea() {
-    setIsNewIdea(true); // Trigger staggered animation
-
     const newTone = locks.tone ? tone : random(tones);
     const newGenre = locks.genre ? genre : random(genres);
     const newMechanic = locks.mechanic ? mechanic : random(mechanics);
@@ -176,9 +106,6 @@ export default function App() {
     setPerspective(newPerspective);
     setRole(newRole);
     setTwist(newTwist);
-
-    // Reset animation flag after animation completes
-    setTimeout(() => setIsNewIdea(false), 2000);
   }
 
   const ideaString = `${articleFor(
@@ -238,88 +165,6 @@ export default function App() {
     toast("Copied to clipboard!", { icon: "📋", duration: 2000 });
   }
 
-  function parseIdeaString(idea: string) {
-    if (!idea || typeof idea !== "string") return null;
-
-    const match = idea.match(
-      /^An? (.+?) (.+?) with (.+?), seen from an? (.+?) perspective, where (.+?), and (.+?)\.$/
-    );
-    if (!match) return null;
-
-    const [, tone, genre, mechanic, perspective, role, twist] = match;
-    return { tone, genre, mechanic, perspective, role, twist };
-  }
-
-  function resolveTheme(theme: "system" | "dark" | "light"): "light" | "dark" {
-    if (theme === "system") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    }
-    return theme;
-  }
-
-  function handleToggleColoredFavorites() {
-    setColoredFavorites((prev) => {
-      const next = !prev;
-      localStorage.setItem("coloredFavorites", String(next));
-      return next;
-    });
-  }
-
-  function handleNameIdea(index: number) {
-    const currentName = favorites[index].name || "";
-    setEditingIndex(index);
-    setEditingName(currentName);
-  }
-
-  function saveEditingName() {
-    if (editingIndex === null) return;
-
-    const updated = [...favorites];
-    updated[editingIndex] = {
-      ...updated[editingIndex],
-      name: editingName.replace(/^\s+/, "") || undefined,
-    };
-
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
-
-    setEditingIndex(null);
-    setEditingName("");
-  }
-
-  function handleRemoveFavorite(idx: number) {
-    const ideaToRemove = favorites[idx];
-
-    // Remove it from state
-    setFavorites((prev) => {
-      const updated = [...prev];
-      updated.splice(idx, 1);
-      localStorage.setItem("favorites", JSON.stringify(updated));
-      return updated;
-    });
-
-    // Show undo toast that only re-inserts the removed idea
-    toast("Removed from favorites", {
-      icon: <Trash2 size={16} className="text-zinc-400" />,
-      action: {
-        label: "Undo",
-        onClick: () => {
-          setFavorites((prev) => {
-            const restored = [...prev];
-            restored.splice(idx, 0, ideaToRemove);
-            localStorage.setItem("favorites", JSON.stringify(restored));
-            return restored;
-          });
-
-          toast("Restored!");
-        },
-      },
-      duration: 4000,
-    });
-  }
-
   function downloadFavorites() {
     const blob = new Blob([JSON.stringify(favorites, null, 2)], {
       type: "application/json",
@@ -332,37 +177,12 @@ export default function App() {
     URL.revokeObjectURL(url);
   }
 
-  function handleGenerateClick() {
-    generateIdea();
-  }
-
-  // Filter favorites based on search query - NAME ONLY
-  let filteredFavorites =
-    searchQuery.length === 0
-      ? [...favorites]
-      : favorites.filter((favoriteItem) => {
-          const name = favoriteItem.name?.toLowerCase() || "";
-          const query = searchQuery.toLowerCase();
-          return exactMatch ? name === query : name.includes(query);
-        });
-
-  if (sortOption === "az") {
-    filteredFavorites.sort((a, b) => {
-      const nameA = (a.name || "").toLowerCase();
-      const nameB = (b.name || "").toLowerCase();
-      return nameA.localeCompare(nameB);
+  function handleToggleColoredFavorites() {
+    setColoredFavorites((prev) => {
+      const next = !prev;
+      localStorage.setItem("coloredFavorites", String(next));
+      return next;
     });
-  } else if (sortOption === "za") {
-    filteredFavorites.sort((a, b) => {
-      const nameA = (a.name || "").toLowerCase();
-      const nameB = (b.name || "").toLowerCase();
-      return nameB.localeCompare(nameA);
-    });
-  } else if (sortOption === "oldest") {
-    filteredFavorites.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0));
-  } else if (sortOption === "default") {
-    // default = newest first
-    filteredFavorites.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
   }
 
   const isCurrentIdeaFavorited = favorites.some((f) => f.idea === ideaString);
@@ -376,7 +196,7 @@ export default function App() {
         </h1>
 
         <motion.button
-          onClick={handleGenerateClick}
+          onClick={generateIdea}
           whileTap={{ scale: 0.95 }}
           className="bg-zinc-800 hover:bg-zinc-900 text-white dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black font-semibold px-8 py-3 rounded-full shadow-lg transition-all duration-300 flex items-center cursor-pointer"
         >
@@ -387,39 +207,10 @@ export default function App() {
           <TooltipInfo />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          {Object.entries(locks).map(([key, value]) => {
-            return (
-              <motion.button
-                key={key}
-                onClick={() => setLocks((prev) => ({ ...prev, [key]: !value }))}
-                whileTap={{ scale: 0.95 }}
-                className={`px-4 py-2 text-sm rounded-md border transition font-medium cursor-pointer ${
-                  value
-                    ? categoryColors[key]
-                    : "bg-white dark:bg-zinc-800 text-gray-800 dark:text-white border-zinc-300 dark:border-zinc-700"
-                }`}
-              >
-                {value ? (
-                  <Lock
-                    size={16}
-                    className={`inline mr-1 ${categoryColors[key]}`}
-                  />
-                ) : (
-                  <Unlock
-                    size={16}
-                    className={`inline mr-1 ${categoryColors[key]}`}
-                  />
-                )}{" "}
-                {key}
-              </motion.button>
-            );
-          })}
-        </div>
+        <LockButtons locks={locks} setLocks={setLocks} />
 
         {fullIdea && (
           <div className="max-w-xl w-full">
-            {/* Action buttons for generated idea */}
             <div className="flex items-center justify-end gap-2 mb-2">
               <motion.button
                 onClick={() => copyToClipboard(ideaString)}
@@ -427,7 +218,10 @@ export default function App() {
                 className="p-2 bg-white dark:bg-zinc-800 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
                 title="Copy"
               >
-                <Copy size={18} className="text-gray-600 dark:text-gray-300 dark:group-hover:text-white group-hover:text-zinc-900 transition-colors duration-300" />
+                <Copy
+                  size={18}
+                  className="text-gray-600 dark:text-gray-300 dark:group-hover:text-white group-hover:text-zinc-900 transition-colors duration-300"
+                />
               </motion.button>
 
               <motion.button
@@ -452,256 +246,23 @@ export default function App() {
             </div>
 
             <IdeaCard
+              key={ideaString}
               idea={ideaString}
               ideaDisplay={fullIdea}
               colored={true}
-              isNew={isNewIdea}
               onSave={undefined}
               onCopy={undefined}
             />
           </div>
         )}
 
-        {(favorites.length > 0 || filteredFavorites.length > 0) && (
-          <div className="max-w-xl w-full mt-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2 sm:gap-4">
-              {/* Title with icon */}
-              <div className="flex items-center gap-2">
-                <Star
-                  size={20}
-                  fill="currentColor"
-                  className="text-yellow-400"
-                />
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                  Favorites
-                </h2>
-              </div>
-
-              {/* Sort control */}
-              <SortDropdown
-                sortOption={sortOption}
-                setSortOption={setSortOption}
-              />
-            </div>
-
-            <div className="relative mb-4">
-              <Search
-                size={18}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none"
-              />
-              <input
-                type="text"
-                placeholder={
-                  exactMatch
-                    ? "Search for exact name..."
-                    : "Search favorites by name..."
-                }
-                value={searchQuery}
-                onChange={(e) =>
-                  setSearchQuery(e.target.value.replace(/^\s+/, ""))
-                }
-                className="w-full pl-10 pr-44 py-3 text-sm bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
-              />
-
-              {/* Exact match toggle button */}
-              <div className="absolute right-10 top-1/2 -translate-y-1/2 flex border border-zinc-300 dark:border-zinc-600 rounded-md overflow-hidden text-xs font-semibold">
-                <button
-                  onClick={() => setExactMatch(false)}
-                  className={`px-3 py-1 transition-colors ${
-                    exactMatch
-                      ? "bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                      : "dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black bg-zinc-800 hover:bg-zinc-900 text-white"
-                  }`}
-                >
-                  Normal
-                </button>
-                <button
-                  onClick={() => setExactMatch(true)}
-                  className={`px-3 py-1 transition-colors ${
-                    exactMatch
-                      ? "dark:bg-zinc-200 dark:hover:bg-zinc-300 dark:text-black bg-zinc-800 hover:bg-zinc-900 text-white"
-                      : "bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                  }`}
-                >
-                  Strict
-                </button>
-              </div>
-
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
-
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">
-              Favorites are saved only on this device.
-              {searchQuery &&
-                ` Showing ${filteredFavorites.length} of ${favorites.length} favorites.`}
-            </p>
-
-            {filteredFavorites.length === 0 && searchQuery && (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <Search size={32} className="mx-auto mb-2 opacity-50" />
-                <p>No favorites found matching "{searchQuery}"</p>
-              </div>
-            )}
-
-            <ul className="space-y-4 min-h-[1px]">
-              <AnimatePresence mode="popLayout">
-                {filteredFavorites.map((favoriteItem) => {
-                  // Find the original index in the full favorites array
-                  const originalIdx = favorites.findIndex(
-                    (f) => f === favoriteItem
-                  );
-
-                  // Handle both old string format and new object format
-                  const idea =
-                    typeof favoriteItem === "string"
-                      ? favoriteItem
-                      : favoriteItem?.idea;
-                  const name =
-                    typeof favoriteItem === "object" && favoriteItem
-                      ? favoriteItem.name
-                      : undefined;
-
-                  if (!idea) return null; // Skip invalid entries
-
-                  const parts = parseIdeaString(idea);
-
-                  const ideaDisplay =
-                    coloredFavorites && parts ? (
-                      <>
-                        {articleFor(parts.tone)}{" "}
-                        <span className={categoryColors.tone}>
-                          {parts.tone}
-                        </span>{" "}
-                        <span className={categoryColors.genre}>
-                          {parts.genre}
-                        </span>{" "}
-                        with{" "}
-                        <span className={categoryColors.mechanic}>
-                          {parts.mechanic}
-                        </span>
-                        , seen from{" "}
-                        {articleFor(parts.perspective).toLowerCase()}{" "}
-                        <span className={categoryColors.perspective}>
-                          {parts.perspective}
-                        </span>{" "}
-                        perspective, where{" "}
-                        <span className={categoryColors.role}>
-                          {parts.role}
-                        </span>
-                        , and{" "}
-                        <span className={categoryColors.twist}>
-                          {parts.twist}
-                        </span>
-                        .
-                      </>
-                    ) : null;
-
-                  // Use a stable key based on the idea content to prevent re-animations
-                  const stableKey = idea;
-
-                  return (
-                    <motion.li
-                      key={stableKey}
-                      layout
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        y: -10,
-                        scale: 0.95,
-                        transition: { duration: 0.3 },
-                      }}
-                      transition={{
-                        layout: { duration: 0.3 },
-                        opacity: { duration: 0.3 },
-                        y: { duration: 0.3 },
-                        scale: { duration: 0.3 },
-                      }}
-                      className="space-y-2"
-                    >
-                      {/* Name section with inline editing */}
-                      <div className="flex items-center justify-between min-h-[2.5rem]">
-                        <div className="flex-1">
-                          {editingIndex === originalIdx ? (
-                            <input
-                              type="text"
-                              value={editingName}
-                              onChange={(e) => setEditingName(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") saveEditingName();
-                              }}
-                              onBlur={saveEditingName}
-                              className="w-full px-0 py-1 text-lg font-semibold bg-transparent border-none focus:outline-none text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 h-7"
-                              placeholder="Enter idea name..."
-                              autoFocus
-                            />
-                          ) : (
-                            <h3
-                              className="text-lg font-semibold text-gray-800 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors h-7 flex items-center"
-                              onClick={() => handleNameIdea(originalIdx)}
-                              title="Click to edit name"
-                            >
-                              {name || `Idea ${originalIdx + 1}`}
-                            </h3>
-                          )}
-                        </div>
-
-                        {/* Action buttons */}
-                        <div className="flex items-center gap-2 ml-4">
-                          <motion.button
-                            onClick={() => copyToClipboard(idea)}
-                            whileTap={{ scale: 0.95 }}
-                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
-                            title="Copy idea"
-                          >
-                            <Copy
-                              size={18}
-                              className="text-gray-600 dark:text-gray-300 dark:group-hover:text-white group-hover:text-black transition-colors duration-300"
-                            />
-                          </motion.button>
-
-                          <motion.button
-                            onClick={() => handleRemoveFavorite(originalIdx)}
-                            whileTap={{ scale: 0.95 }}
-                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
-                            title="Remove from favorites"
-                          >
-                            <Trash2
-                              size={18}
-                              className="text-gray-600 dark:text-gray-300 group-hover:text-red-400 transition-colors duration-300"
-                            />
-                          </motion.button>
-                        </div>
-                      </div>
-
-                      {/* Idea card without action buttons */}
-                      <IdeaCard
-                        idea={idea}
-                        ideaDisplay={ideaDisplay}
-                        colored={coloredFavorites}
-                        // Remove the action buttons from the card
-                        onCopy={undefined}
-                        onRemove={undefined}
-                      />
-                    </motion.li>
-                  );
-                })}
-              </AnimatePresence>
-            </ul>
-          </div>
-        )}
+        <FavoritesList
+          favorites={favorites}
+          setFavorites={setFavorites}
+          coloredFavorites={coloredFavorites}
+        />
       </main>
+
       <footer className="text-xs text-gray-500 dark:text-gray-400 text-center p-2">
         <a
           href="https://icons8.com/icon/GFDbOB2OqPWt/game-controller"
