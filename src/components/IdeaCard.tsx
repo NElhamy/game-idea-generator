@@ -131,7 +131,7 @@ export default function IdeaCard({
       transition={{ duration: 0.3 }}
       className="bg-white dark:bg-zinc-800 shadow-xl rounded-2xl px-6 py-5 max-w-xl w-full relative"
     >
-      <motion.p className="text-md font-medium text-zinc-800 dark:text-white pr-20 leading-relaxed text-left">
+      <motion.p className="text-md font-medium text-zinc-800 dark:text-white leading-relaxed text-left">
         {isNew && colored && parts
           ? createStaggeredContent()
           : colored && ideaDisplay

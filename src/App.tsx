@@ -368,7 +368,7 @@ export default function App() {
   const isCurrentIdeaFavorited = favorites.some((f) => f.idea === ideaString);
 
   return (
-    <div className="min-h-screen transition-colors duration-200 flex flex-col bg-zinc-100 dark:bg-zinc-900">
+    <div className="min-h-screen transition-colors duration-300 flex flex-col bg-zinc-100 dark:bg-zinc-900">
       <main className="grow flex flex-col items-center justify-start gap-8 py-24 px-10">
         <h1 className="flex flex-col sm:flex-row items-center gap-2 text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white text-center sm:text-left">
           <Gamepad2 size={40} className="text-gray-800 dark:text-white" />
@@ -424,16 +424,16 @@ export default function App() {
               <motion.button
                 onClick={() => copyToClipboard(ideaString)}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-200 cursor-pointer"
-                title="Copy idea"
+                className="p-2 bg-white dark:bg-zinc-800 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
+                title="Copy"
               >
-                <Copy size={18} className="text-gray-600 dark:text-gray-300" />
+                <Copy size={18} className="text-gray-600 dark:text-gray-300 dark:group-hover:text-white group-hover:text-zinc-900 transition-colors duration-300" />
               </motion.button>
 
               <motion.button
                 onClick={saveIdea}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-200 cursor-pointer"
+                className="p-2 bg-white dark:bg-zinc-800 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
                 title={
                   isCurrentIdeaFavorited
                     ? "Remove from favorites"
@@ -445,7 +445,7 @@ export default function App() {
                   className={`${
                     isCurrentIdeaFavorited
                       ? "text-yellow-500 fill-current"
-                      : "text-gray-600 dark:text-gray-300"
+                      : "text-gray-600 dark:text-gray-300 group-hover:text-yellow-500 transition-colors duration-300"
                   }`}
                 />
               </motion.button>
@@ -662,22 +662,25 @@ export default function App() {
                           <motion.button
                             onClick={() => copyToClipboard(idea)}
                             whileTap={{ scale: 0.95 }}
-                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-200 cursor-pointer"
+                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
                             title="Copy idea"
                           >
                             <Copy
                               size={18}
-                              className="text-gray-600 dark:text-gray-300"
+                              className="text-gray-600 dark:text-gray-300 dark:group-hover:text-white group-hover:text-black transition-colors duration-300"
                             />
                           </motion.button>
 
                           <motion.button
                             onClick={() => handleRemoveFavorite(originalIdx)}
                             whileTap={{ scale: 0.95 }}
-                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-red-50 dark:hover:bg-red-900/20 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-200 cursor-pointer"
+                            className="p-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 rounded-md transition-colors duration-300 cursor-pointer group"
                             title="Remove from favorites"
                           >
-                            <Trash2 size={18} className="text-red-500" />
+                            <Trash2
+                              size={18}
+                              className="text-gray-600 dark:text-gray-300 group-hover:text-red-400 transition-colors duration-300"
+                            />
                           </motion.button>
                         </div>
                       </div>

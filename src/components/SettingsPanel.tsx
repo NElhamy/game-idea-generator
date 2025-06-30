@@ -83,14 +83,14 @@ export default function SettingsPanel({
             handleOpen();
           }
         }}
-        className={`p-2 rounded-full bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white shadow hover:shadow-md cursor-pointer transition-all duration-200 ${
+        className={`p-2 rounded-full bg-white dark:bg-zinc-800 text-zinc-800 dark:text-white shadow hover:shadow-md cursor-pointer transition-all duration-300 ${
           open && !isClosing ? "ring-2 ring-blue-500/50" : ""
         }`}
         aria-label="Settings"
       >
         <Settings
           size={20}
-          className={`transition-transform duration-200 ${
+          className={`transition-transform duration-300 ${
             open && !isClosing ? "rotate-45" : ""
           }`}
         />
@@ -99,7 +99,7 @@ export default function SettingsPanel({
       {(open || isClosing) && (
         <div
           ref={panelRef}
-          className={`absolute right-0 mt-2 w-64 bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700 p-5 space-y-5 text-sm transition-all duration-200 ease-out ${
+          className={`absolute right-0 mt-2 w-64 bg-white dark:bg-zinc-800 rounded-xl shadow-xl border border-zinc-200 dark:border-zinc-700 p-5 space-y-5 text-sm transition-all duration-300 ease-out ${
             isClosing
               ? "opacity-0 scale-95 -translate-y-2"
               : justOpened

@@ -62,7 +62,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm min-w-[140px]"
+        className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm min-w-[140px]"
       >
         <ArrowUpDown size={16} className="text-gray-500 dark:text-gray-400" />
         <span className="text-sm font-medium flex-1 text-left">
@@ -70,7 +70,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         </span>
         <ChevronDown
           size={16}
-          className={`text-gray-400 transition-transform duration-200 ${
+          className={`text-gray-400 transition-transform duration-300 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -86,7 +86,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
           />
 
           {/* Menu */}
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-xl z-20 animate-in fade-in slide-in-from-top-2 duration-200 min-w-[180px] p-2 space-y-1">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-xl z-20 animate-in fade-in slide-in-from-top-2 duration-300 min-w-[180px] p-2 space-y-1">
             {sortOptions.map((option) => (
               <button
                 key={option.value}

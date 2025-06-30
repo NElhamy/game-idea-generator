@@ -24,14 +24,14 @@ export default function Switch({ checked, onChange, label }: SwitchProps) {
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`relative w-10 h-6 rounded-full transition-colors duration-200 focus:outline-none cursor-pointer
+        className={`relative w-10 h-6 rounded-full transition-colors duration-300 focus:outline-none cursor-pointer
           ${checked ? "bg-blue-500" : "bg-zinc-400"}
           ${isFocused ? "ring-2 ring-offset-2 ring-blue-400" : ""}
         `}
         tabIndex={0}
       >
         <span
-          className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ${
+          className={`absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
             checked ? "translate-x-4" : ""
           }`}
         />

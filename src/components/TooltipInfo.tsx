@@ -39,7 +39,7 @@ export default function TooltipInfo() {
 
       {/* Tooltip */}
       <div
-        className={`absolute z-10 text-white dark:text-black text-xs px-3 py-2 rounded shadow transition-all duration-200
+        className={`absolute z-10 text-white dark:text-black text-xs px-3 py-2 rounded shadow transition-all duration-300
           max-w-[70vw] w-max text-center
           sm:left-14 sm:top-3
           left-1/2 top-full mt-2 -translate-x-1/2
