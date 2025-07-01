@@ -8,9 +8,11 @@ A creative tool for game developers and enthusiasts to generate unique game conc
 
 ![Generator Dark Mode](./public/screenshots/generator-dark.png)
 
+
 ## 🌐 Live Demo
 
 Try it out: [gameideas.vercel.app](https://gameideas.vercel.app)
+
 
 ## ✨ Features
 
@@ -23,6 +25,7 @@ Try it out: [gameideas.vercel.app](https://gameideas.vercel.app)
 - 💾 **Data Export** - Download your collection as JSON for backup or sharing
 - ♻️ **Undo Support** - Restore accidentally deleted favorites
 - 📱 **Fully Responsive** - Works perfectly on desktop, tablet, and mobile
+
 
 ## 🚀 Getting Started
 
@@ -47,6 +50,7 @@ npm install
 npm run dev
 ```
 
+
 ## 🛠️ Tech Stack
 
 - **Framework:** [React 18](https://reactjs.org/) with TypeScript
@@ -55,6 +59,7 @@ npm run dev
 - **Animations:** [Framer Motion](https://www.framer.com/motion/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **Notifications:** [Sonner](https://sonner.emilkowal.ski/)
+
 
 ## 📁 Project Structure
 
@@ -72,6 +77,7 @@ src/
 └── App.tsx            # Main application component
 ```
 
+
 ## 🔧 Available Scripts
 
 ```bash
@@ -80,6 +86,7 @@ npm run build     # Build for production
 npm run preview   # Preview production build locally
 npm run lint      # Run ESLint
 ```
+
 
 ## 🤝 Contributing
 
@@ -91,9 +98,11 @@ Contributions are welcome!
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 ## 🙏 Acknowledgments
 
