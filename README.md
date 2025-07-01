@@ -6,6 +6,8 @@ A creative tool for game developers and enthusiasts to generate unique game conc
 ![Node](https://img.shields.io/badge/node-%3E%3D16-green)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 
+![Generator Dark Mode](./public/screenshots/generator-dark.png)
+
 ## ✨ Features
 
 - 🎲 **Instant Generation** - Create unique game ideas with one click
@@ -44,22 +46,6 @@ npm run dev
 ## 🌐 Live Demo
 
 Try it out: [gameideas.vercel.app](https://gameideas.vercel.app)
-
-## 🖼️ Screenshots
-
-<details>
-<summary>View Screenshots</summary>
-
-🌙 Idea Generator (Dark Mode)
-![Generator Dark Mode](./public/screenshots/generator-dark.png)
-
-⭐ Favorites Section with Search & Color
-![Favorites Section](./public/screenshots/favorites-section.png)
-
-⚙️ Settings Panel
-![Settings Panel](./public/screenshots/settings-panel.png)
-
-</details>
 
 ## 🛠️ Tech Stack
 
