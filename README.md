@@ -8,6 +8,10 @@ A creative tool for game developers and enthusiasts to generate unique game conc
 
 ![Generator Dark Mode](./public/screenshots/generator-dark.png)
 
+## 🌐 Live Demo
+
+Try it out: [gameideas.vercel.app](https://gameideas.vercel.app)
+
 ## ✨ Features
 
 - 🎲 **Instant Generation** - Create unique game ideas with one click
@@ -42,10 +46,6 @@ npm install
 # Start development server
 npm run dev
 ```
-
-## 🌐 Live Demo
-
-Try it out: [gameideas.vercel.app](https://gameideas.vercel.app)
 
 ## 🛠️ Tech Stack
 
